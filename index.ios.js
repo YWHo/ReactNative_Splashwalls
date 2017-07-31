@@ -29,6 +29,30 @@ export default class SplashWalls extends Component {
       </View>
     );
   }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      wallsJSON: [],
+      isLoading: true
+    };
+  }
+
+  fetchWallsJSON() {
+    console.log('Wallpapers will be fetched');
+    var url = 'http://unsplash.it/list';
+    fetch(url)
+      .then((response) => response.json() )
+      .then( responseJson => {
+        console.log(responseJson);
+      })
+        .catch( error => console.log('Fetch error: ' + error) );
+  }
+
+  componentDidMount() {
+    this.fetchWallsJSON();
+  }
 }
 
 const styles = StyleSheet.create({
