@@ -13,24 +13,10 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-export default class SplashWalls extends Component {
-  //render() {
-  //  return (
-  //    <View style={styles.container}>
-  //      <Text style={styles.welcome}>
-  //        Welcome to React Native!
-  //      </Text>
-  //      <Text style={styles.instructions}>
-  //        To get started, edit index.ios.js
-  //      </Text>
-  //      <Text style={styles.instructions}>
-  //        Press Cmd+R to reload,{'\n'}
-  //        Cmd+D or shake for dev menu
-  //      </Text>
-  //    </View>
-  //  );
-  //}
+var RandManager = require('./RandManager.js');
+const NUM_WALLPAPERS = 5;
 
+export default class SplashWalls extends Component {
   render() {
     var { isLoading } = this.state;
     if (isLoading) {
@@ -55,13 +41,20 @@ export default class SplashWalls extends Component {
   }
 
   renderResults() {
-    return (
-      <View>
-        <Text>
-          Data loaded
-        </Text>
-      </View>
-    );
+    var {wallsJSON, isLoading} = this.state;
+      if( !isLoading ) {
+        return (
+          <View>
+            {wallsJSON.map((wallpaper, index) => {
+              return(
+                <Text key={index}>
+                  {wallpaper.author}
+                </Text>
+              );
+            })}
+           </View>
+         );
+      }
   }
 
   constructor(props) {
@@ -79,8 +72,18 @@ export default class SplashWalls extends Component {
     fetch(url)
       .then((response) => response.json() )
       .then( responseJson => {
+        var randomIds = RandManager.uniqueRandomNumbers(NUM_WALLPAPERS,
+                                            0, responseJson.length);
+        var walls = [];
+        randomIds.forEach(randomId => {
+          walls.push(responseJson[randomId]);
+        });
+
         console.log(responseJson);
-        this.setState({isLoading: false});
+        this.setState({
+          isLoading: false,
+          wallsJSON: [].concat(walls)
+        });
         console.log('set isLoading to false');
       })
         .catch( error => console.log('Fetch error: ' + error) );
