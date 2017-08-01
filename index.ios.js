@@ -10,12 +10,16 @@ import {
   StyleSheet,
   Text,
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from 'react-native';
 
 var RandManager = require('./RandManager.js');
 var Swiper = require('react-native-swiper');
+import NetworkImage from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 const NUM_WALLPAPERS = 5;
+var winDimension = Dimensions.get('window');
 
 export default class SplashWalls extends Component {
   render() {
@@ -43,11 +47,12 @@ export default class SplashWalls extends Component {
 
   renderResults() {
     var {wallsJSON, isLoading} = this.state;
+      console.log(`width= ${winDimension.width}, height= ${winDimension.height}`);
       if( !isLoading ) {
         return (
 
           <Swiper
-            dot = {<View style={{backgroundColor:'rgba(0,0,255,.4)',
+            dot = {<View style={{backgroundColor:'rgba(255,255,255,.4)',
                                  width: 8,
                                  height: 8,
                                  borderRadius: 10,
@@ -56,7 +61,7 @@ export default class SplashWalls extends Component {
                                  marginTop: 3,
                                  marginBottom: 3, }} />}
 
-            activeDot = {<View style={{backgroundColor: '#00f',
+            activeDot = {<View style={{backgroundColor: '#fff',
                                        width: 13,
                                        height: 13,
                                        borderRadius: 7,
@@ -67,9 +72,18 @@ export default class SplashWalls extends Component {
           >
             {wallsJSON.map((wallpaper, index) => {
               return(
-                <Text key={index}>
-                  {wallpaper.author}
-                </Text>
+                <View key={index} style={styles.container}>
+                  <NetworkImage
+                    source={{uri: `https://unsplash.it/${wallpaper.width}/${wallpaper.height}?image=${wallpaper.id}`}}
+                    indicator={Progress.Circle}
+                    style={styles.wallpaperImage}
+                    indicatorProps={{
+                        color: 'rgba(255, 255, 255)',
+                        size: 60,
+                        thickness: 7
+                    }}
+                   />
+                </View>
               );
             })}
          </Swiper>
@@ -122,12 +136,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#000'
   },
-  //container: {
-  //  flex: 1,
-  //  justifyContent: 'center',
-  //  alignItems: 'center',
-  //  backgroundColor: '#F5FCFF',
-  //},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  wallpaperImage: {
+    flex: 1,
+    width: winDimension.width,
+    height: winDimension.height,
+    backgroundColor: '#000'
+  },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
