@@ -45,7 +45,26 @@ export default class SplashWalls extends Component {
     var {wallsJSON, isLoading} = this.state;
       if( !isLoading ) {
         return (
-          <Swiper>
+
+          <Swiper
+            dot = {<View style={{backgroundColor:'rgba(0,0,255,.4)',
+                                 width: 8,
+                                 height: 8,
+                                 borderRadius: 10,
+                                 marginLeft: 3,
+                                 marginRight: 3,
+                                 marginTop: 3,
+                                 marginBottom: 3, }} />}
+
+            activeDot = {<View style={{backgroundColor: '#00f',
+                                       width: 13,
+                                       height: 13,
+                                       borderRadius: 7,
+                                       marginLeft: 7,
+                                       marginRight: 7}} />}
+
+            loop = {false}
+          >
             {wallsJSON.map((wallpaper, index) => {
               return(
                 <Text key={index}>
@@ -53,8 +72,8 @@ export default class SplashWalls extends Component {
                 </Text>
               );
             })}
-           </Swiper>
-         );
+         </Swiper>
+        );
       }
   }
 
