@@ -9,22 +9,56 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 
 export default class SplashWalls extends Component {
+  //render() {
+  //  return (
+  //    <View style={styles.container}>
+  //      <Text style={styles.welcome}>
+  //        Welcome to React Native!
+  //      </Text>
+  //      <Text style={styles.instructions}>
+  //        To get started, edit index.ios.js
+  //      </Text>
+  //      <Text style={styles.instructions}>
+  //        Press Cmd+R to reload,{'\n'}
+  //        Cmd+D or shake for dev menu
+  //      </Text>
+  //    </View>
+  //  );
+  //}
+
   render() {
+    var { isLoading } = this.state;
+    if (isLoading) {
+      return this.renderLoadingMessage();
+    } else {
+      return this.renderResults();
+    }
+  }
+
+  renderLoadingMessage() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator
+          animating={true}
+          color={'#fff'}
+          size={'small'} 
+          style={{margin: 15}} />
+          <Text style={{color: '#fff'}}>Contacting Unsplash</Text>
+       
+      </View>
+    );
+  }
+
+  renderResults() {
+    return (
+      <View>
+        <Text>
+          Data loaded
         </Text>
       </View>
     );
@@ -46,6 +80,8 @@ export default class SplashWalls extends Component {
       .then((response) => response.json() )
       .then( responseJson => {
         console.log(responseJson);
+        this.setState({isLoading: false});
+        console.log('set isLoading to false');
       })
         .catch( error => console.log('Fetch error: ' + error) );
   }
@@ -56,12 +92,19 @@ export default class SplashWalls extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  loadingContainer: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#000'
   },
+  //container: {
+  //  flex: 1,
+  //  justifyContent: 'center',
+  //  alignItems: 'center',
+  //  backgroundColor: '#F5FCFF',
+  //},
   welcome: {
     fontSize: 20,
     textAlign: 'center',
