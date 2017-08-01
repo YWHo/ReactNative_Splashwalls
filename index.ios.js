@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 var RandManager = require('./RandManager.js');
+var Swiper = require('react-native-swiper');
 const NUM_WALLPAPERS = 5;
 
 export default class SplashWalls extends Component {
@@ -44,7 +45,7 @@ export default class SplashWalls extends Component {
     var {wallsJSON, isLoading} = this.state;
       if( !isLoading ) {
         return (
-          <View>
+          <Swiper>
             {wallsJSON.map((wallpaper, index) => {
               return(
                 <Text key={index}>
@@ -52,7 +53,7 @@ export default class SplashWalls extends Component {
                 </Text>
               );
             })}
-           </View>
+           </Swiper>
          );
       }
   }
