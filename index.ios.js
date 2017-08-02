@@ -14,8 +14,8 @@ import {
   Dimensions
 } from 'react-native';
 
-var RandManager = require('./RandManager.js');
-var Swiper = require('react-native-swiper');
+import RandManager from './RandManager.js';
+import Swiper from 'react-native-swiper';
 import NetworkImage from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
 const NUM_WALLPAPERS = 5;
@@ -82,7 +82,10 @@ export default class SplashWalls extends Component {
                         size: 60,
                         thickness: 7
                     }}
-                   />
+                  > 
+                    <Text style={styles.label}>Photo by</Text>
+                    <Text style={styles.label_authorName}>{wallpaper.author}</Text>
+                  </NetworkImage>
                 </View>
               );
             })}
@@ -158,6 +161,29 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  label: {
+    position: 'absolute',
+    color: '#fff',
+    fontSize: 13,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: 2,
+    paddingLeft: 5,
+    top: 20,
+    left: 20,
+    width: winDimension.width/2
+  },
+  label_authorName: {
+    position: 'absolute',
+    color: '#fff',
+    fontSize: 15,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: 2,
+    paddingLeft: 5,
+    top: 41,
+    left: 20,
+    fontWeight: 'bold',
+    width: winDimension.width/2
+  }
 });
 
 AppRegistry.registerComponent('SplashWalls', () => SplashWalls);
