@@ -11,7 +11,8 @@ import {
   Text,
   View,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  PanResponder
 } from 'react-native';
 
 import RandManager from './RandManager.js';
@@ -82,6 +83,7 @@ export default class SplashWalls extends Component {
                         size: 60,
                         thickness: 7
                     }}
+                    {...this.imagePanResponder.panHandlers}
                   > 
                     <Text style={styles.label}>Photo by</Text>
                     <Text style={styles.label_authorName}>{wallpaper.author}</Text>
@@ -101,6 +103,7 @@ export default class SplashWalls extends Component {
       wallsJSON: [],
       isLoading: true
     };
+    this.imagePanResponder = {};
   }
 
   fetchWallsJSON() {
@@ -129,7 +132,31 @@ export default class SplashWalls extends Component {
   componentDidMount() {
     this.fetchWallsJSON();
   }
+
+  componentWillMount() {
+    this.imagePanResponder = PanResponder.create({
+
+      onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
+      onPanResponderGrant: this.handlePanResponderGrant,
+      onPanResponderRelease: this.handlePanResponderEnd,
+      onPanResponderTerminate: this.handlePanResponderEnd
+    });
+  }
+
+  handleStartShouldSetPanResponder(e, gestureState) {
+    return true;
+  }
+
+  handlePanResponderGrant(e, gestureState) {
+    console.log('Finger touched the image');
+  }
+
+  handlePanResponderEnd(e, gestureState) {
+    console.log('Finger pulled up from the image');
+  }
+
 }
+
 
 const styles = StyleSheet.create({
   loadingContainer: {
