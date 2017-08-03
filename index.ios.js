@@ -16,10 +16,13 @@ import {
 } from 'react-native';
 
 import RandManager from './RandManager.js';
+import Utils from './Utils.js';
 import Swiper from 'react-native-swiper';
 import NetworkImage from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
 const NUM_WALLPAPERS = 5;
+const DOUBLE_TAP_DELAY = 300; // milliseconds
+const DOUBLE_TAP_RADIUS = 20;
 var winDimension = Dimensions.get('window');
 
 export default class SplashWalls extends Component {
@@ -104,6 +107,12 @@ export default class SplashWalls extends Component {
       isLoading: true
     };
     this.imagePanResponder = {};
+    this.prevTouchInfo = {
+        prevTouchX: 0,
+        prevTouchY: 0,
+        prevTouchTimeStamp: 0
+    }
+    this.handlePanResponderGrant = this.handlePanResponderGrant.bind(this)
   }
 
   fetchWallsJSON() {
@@ -148,7 +157,23 @@ export default class SplashWalls extends Component {
   }
 
   handlePanResponderGrant(e, gestureState) {
-    console.log('Finger touched the image');
+    var currentTouchTimeStamp = Date.now();
+
+    if( this.isDoubleTap(currentTouchTimeStamp, gestureState) ) 
+        console.log('Double tap detected');
+
+    this.prevTouchInfo = {
+        prevTouchX: gestureState.x0,
+        prevTouchY: gestureState.y0,
+        prevTouchTimeStamp: currentTouchTimeStamp
+    };
+  }
+
+  isDoubleTap(currentTouchTimeStamp, {x0, y0}) {
+    var {prevTouchX, prevTouchY, prevTouchTimeStamp} = this.prevTouchInfo;
+    var dt = currentTouchTimeStamp - prevTouchTimeStamp;
+
+    return (dt < DOUBLE_TAP_DELAY && Utils.distance(prevTouchX, prevTouchY, x0, y0) < DOUBLE_TAP_RADIUS);
   }
 
   handlePanResponderEnd(e, gestureState) {
