@@ -12,7 +12,9 @@ import {
   View,
   ActivityIndicator,
   Dimensions,
-  PanResponder
+  PanResponder,
+  CameraRoll,
+  AlertIOS
 } from 'react-native';
 
 import RandManager from './RandManager.js';
@@ -73,6 +75,7 @@ export default class SplashWalls extends Component {
                                        marginRight: 7}} />}
 
             loop = {false}
+            onMomentumScrollEnd={this.onMomentumScrollEnd}
           >
             {wallsJSON.map((wallpaper, index) => {
               return(
@@ -113,6 +116,8 @@ export default class SplashWalls extends Component {
         prevTouchTimeStamp: 0
     }
     this.handlePanResponderGrant = this.handlePanResponderGrant.bind(this)
+    this.onMomentumScrollEnd = this.onMomentumScrollEnd.bind(this);
+    this.currentWallIndex = 0;
   }
 
   fetchWallsJSON() {
@@ -160,7 +165,7 @@ export default class SplashWalls extends Component {
     var currentTouchTimeStamp = Date.now();
 
     if( this.isDoubleTap(currentTouchTimeStamp, gestureState) ) 
-        console.log('Double tap detected');
+        this.saveCurrentWallpaperToCameraRoll();
 
     this.prevTouchInfo = {
         prevTouchX: gestureState.x0,
@@ -178,6 +183,29 @@ export default class SplashWalls extends Component {
 
   handlePanResponderEnd(e, gestureState) {
     console.log('Finger pulled up from the image');
+  }
+
+  onMomentumScrollEnd(e, state, context) {
+    this.currentWallIndex = state.index;
+  }
+
+  saveCurrentWallpaperToCameraRoll() {
+    var {wallsJSON} = this.state;
+    var currentWall = wallsJSON[this.currentWallIndex];
+    var currentWallURL = `http://unsplash.it/${currentWall.width}/${currentWall.height}?image=${currentWall.id}`;
+
+    CameraRoll.saveImageWithTag(currentWallURL, (data) => {  
+      AlertIOS.alert(
+        'Saved',
+        'Wallpaper successfully saved to Camera Roll',
+        [
+          {text: 'High 5!', onPress: () => console.log('OK Pressed!')}
+        ]
+      );
+    },(err) => {
+      console.log('Error saving to camera roll', err);
+    });
+
   }
 
 }
