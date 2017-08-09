@@ -14,7 +14,7 @@ import {
   Dimensions,
   PanResponder,
   CameraRoll,
-  AlertIOS
+  Alert
 } from 'react-native';
 
 import RandManager from './RandManager.js';
@@ -195,7 +195,7 @@ export default class SplashWalls extends Component {
     var currentWallURL = `http://unsplash.it/${currentWall.width}/${currentWall.height}?image=${currentWall.id}`;
 
     CameraRoll.saveToCameraRoll(currentWallURL)
-      .then(AlertIOS.alert(
+      .then(Alert.alert(
              'Saved',
              'Wallpaper successfully saved to Camera Roll',
              [
