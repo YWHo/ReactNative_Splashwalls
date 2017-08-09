@@ -194,17 +194,16 @@ export default class SplashWalls extends Component {
     var currentWall = wallsJSON[this.currentWallIndex];
     var currentWallURL = `http://unsplash.it/${currentWall.width}/${currentWall.height}?image=${currentWall.id}`;
 
-    CameraRoll.saveImageWithTag(currentWallURL, (data) => {  
-      AlertIOS.alert(
-        'Saved',
-        'Wallpaper successfully saved to Camera Roll',
-        [
-          {text: 'High 5!', onPress: () => console.log('OK Pressed!')}
-        ]
-      );
-    },(err) => {
-      console.log('Error saving to camera roll', err);
-    });
+    CameraRoll.saveToCameraRoll(currentWallURL)
+      .then(AlertIOS.alert(
+             'Saved',
+             'Wallpaper successfully saved to Camera Roll',
+             [
+               {text: 'High 5!', onPress: () => console.log('OK Pressed!')}
+              ]
+            ))
+       .catch(err => 
+         console.log('Error saving to camera roll', err));
 
   }
 
